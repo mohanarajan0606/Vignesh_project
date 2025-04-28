@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Expense Tracker</h1>
+        <form action="/add" method="POST">
+            <input type="text" name="description" placeholder="Description" required>
+            <input type="number" name="amount" placeholder="Amount" step="0.01" required>
+            <input type="date" name="date" required>
+            <button type="submit">Add Expense</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set total = 0 %}
+                {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.description }}</td>
+                    <td>${{ "%.2f"|format(expense.amount) }}</td>
+                    <td>{{ expense.date }}</td>
+                </tr>
+                {% set total = total + expense.amount %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td colspan="2"><strong>${{ "%.2f"|format(total) }}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</body>
+</html>
