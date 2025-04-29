@@ -3,41 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Expense Tracker</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>Expense Tracker</h1>
-        <form action="/add" method="POST">
-            <input type="text" name="description" placeholder="Description" required>
-            <input type="number" name="amount" placeholder="Amount" step="0.01" required>
-            <input type="date" name="date" required>
-            <button type="submit">Add Expense</button>
-        </form>
-
-        <table>
-            <thead>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-end">
+            <a href="{{ url_for('add_expense') }}" class="btn btn-info mb-3">Add Expense</a>
+        </div>
+        <h1 class="text-center mb-4">Expense Tracker</h1>
+        <table class="table table-bordered">
+            <thead class="table-dark text-center">
                 <tr>
                     <th>Description</th>
-                    <th>Amount</th>
+                    <th>Amount ($)</th>
                     <th>Date</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% set total = 0 %}
                 {% for expense in expenses %}
                 <tr>
                     <td>{{ expense.description }}</td>
                     <td>${{ "%.2f"|format(expense.amount) }}</td>
-                    <td>{{ expense.date }}</td>
+                    <td>{{ expense.dates }}</td>
+                    <td>
+                        <a href="{{ url_for('edit_expense', id=expense.id) }}" class="btn btn-sm btn-primary">Edit</a>
+                        <a href="{{ url_for('delete_expense', id=expense.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</a>
+                    </td>
                 </tr>
-                {% set total = total + expense.amount %}
                 {% endfor %}
             </tbody>
-            <tfoot>
+            <tfoot class="table-light">
                 <tr>
                     <td><strong>Total</strong></td>
-                    <td colspan="2"><strong>${{ "%.2f"|format(total) }}</strong></td>
+                    <td colspan="1"><strong>${{ "%.2f"|format(total_amount) }}</strong></td>
+                    <td colspan="2"></td> <!-- Empty cells to align properly -->
                 </tr>
             </tfoot>
         </table>
